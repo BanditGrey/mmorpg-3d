@@ -1,0 +1,194 @@
+[
+  {
+    "name": "warrior",
+    "verts": 1452,
+    "faces": 1726,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "mage",
+    "verts": 884,
+    "faces": 1728,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "paladin",
+    "verts": 988,
+    "faces": 1148,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "archer",
+    "verts": 1158,
+    "faces": 1950,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "assassin",
+    "verts": 820,
+    "faces": 960,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "slime",
+    "verts": 592,
+    "faces": 1168,
+    "clips": [
+      "Body_Attack",
+      "Body_Idle",
+      "Body_Walk"
+    ]
+  },
+  {
+    "name": "wolf",
+    "verts": 990,
+    "faces": 1936,
+    "clips": [
+      "BL_Attack",
+      "BL_Idle",
+      "BL_Walk",
+      "BR_Attack",
+      "BR_Idle",
+      "BR_Walk",
+      "Body_Attack",
+      "Body_Idle",
+      "Body_Walk",
+      "FL_Attack",
+      "FL_Idle",
+      "FL_Walk",
+      "FR_Attack",
+      "FR_Idle",
+      "FR_Walk",
+      "Head_Attack",
+      "Head_Idle",
+      "Head_Walk",
+      "Tail_Attack",
+      "Tail_Idle",
+      "Tail_Walk"
+    ]
+  },
+  {
+    "name": "orc",
+    "verts": 780,
+    "faces": 1364,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  },
+  {
+    "name": "boss_golem",
+    "verts": 2172,
+    "faces": 740,
+    "clips": [
+      "Arm.L_Attack",
+      "Arm.L_Idle",
+      "Arm.L_Walk",
+      "Arm.R_Attack",
+      "Arm.R_Idle",
+      "Arm.R_Walk",
+      "Leg.L_Attack",
+      "Leg.L_Idle",
+      "Leg.L_Walk",
+      "Leg.R_Attack",
+      "Leg.R_Idle",
+      "Leg.R_Walk",
+      "Pelvis_Attack",
+      "Pelvis_Idle",
+      "Pelvis_Walk"
+    ]
+  }
+]

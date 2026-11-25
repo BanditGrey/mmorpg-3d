@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eldoria — Admin Control Center</title>
+    <style>
+      :root {
+        --bg: #070b12;
+        --panel: #0f1623;
+        --card: #162032;
+        --border: rgba(148, 163, 184, 0.2);
+        --gold: #fbbf24;
+        --green: #22c55e;
+        --red: #ef4444;
+        --blue: #3b82f6;
+        --text: #f1f5f9;
+        --muted: #94a3b8;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Segoe UI', system-ui, sans-serif;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 20px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+      }
+      h1 { margin: 0; font-size: 18px; color: var(--gold); }
+      .wrap { max-width: 1200px; margin: 0 auto; padding: 16px; display: grid; gap: 16px; }
+      .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+      .card {
+        background: var(--panel);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .kpi-val { font-size: 24px; font-weight: 800; margin-top: 4px; }
+      .kpi-lbl { font-size: 12px; color: var(--muted); }
+      .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; }
+      label { font-size: 12px; color: var(--muted); display: block; margin-bottom: 4px; }
+      input, select {
+        width: 100%;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+      }
+      button {
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        background: var(--card);
+        color: var(--text);
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button.primary { background: #b45309; border-color: var(--gold); }
+      button.danger { background: #991b1b; border-color: var(--red); }
+      button.success { background: #166534; border-color: var(--green); }
+      table { width: 100%; border-collapse: collapse; font-size: 12px; }
+      th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--border); }
+      th { color: var(--muted); }
+      .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      .pill { padding: 3px 8px; border-radius: 12px; font-size: 11px; font-weight: 700; }
+      .pill-on { background: rgba(34, 197, 94, 0.2); color: var(--green); }
+      .pill-off { background: rgba(239, 68, 68, 0.2); color: var(--red); }
+      #auth-gate {
+        position: fixed; inset: 0; background: rgba(7, 11, 18, 0.96);
+        display: flex; align-items: center; justify-content: center; z-index: 100;
+      }
+      #auth-gate.hidden { display: none; }
+    </style>
+  </head>
+  <body>
+    <div id="auth-gate">
+      <div class="card" style="width:340px;display:grid;gap:12px">
+        <h2 style="margin:0;color:var(--gold)">Admin Control Center</h2>
+        <label>Chave Administrativa (ADMIN_KEY)</label>
+        <input id="admin-key-in" type="password" value="eldoria-admin-2026" />
+        <button class="primary" id="btn-login-adm">Conectar ao Painel</button>
+        <div id="auth-err" style="color:var(--red);font-size:12px"></div>
+      </div>
+    </div>
+
+    <header>
+      <h1>Eldoria Vertical — Admin & Database Center</h1>
+      <div class="row">
+        <span id="srv-status" class="pill pill-on">ONLINE</span>
+        <button id="btn-refresh">Atualizar</button>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="kpi-grid" id="kpis"></section>
+
+      <section class="grid-2">
+        <div class="card" style="display:grid;gap:10px">
+          <h3 style="margin:0;color:var(--gold)">Controles Globais do Servidor</h3>
+          <div class="row">
+            <div style="flex:1">
+              <label>XP Rate (Multiplicador)</label>
+              <input id="cfg-xp" type="number" step="0.5" min="0.5" max="20" />
+            </div>
+            <div style="flex:1">
+              <label>Drop Rate (Multiplicador)</label>
+              <input id="cfg-drop" type="number" step="0.5" min="0.5" max="10" />
+            </div>
+          </div>
+          <div>
+            <label>Mensagem do Dia (MOTD)</label>
+            <input id="cfg-motd" type="text" maxlength="140" />
+          </div>
+          <div class="row">
+            <label style="display:flex;align-items:center;gap:6px;margin:0;cursor:pointer">
+              <input id="cfg-maint" type="checkbox" style="width:auto" /> Modo Manutenção (bloqueia novos logins)
+            </label>
+          </div>
+          <div class="row">
+            <button class="primary" id="btn-save-cfg">Aplicar Configurações</button>
+            <button class="success" id="btn-save-all">Salvar Mundo Agora</button>
+            <button id="btn-respawn-boss">Respawn Boss</button>
+            <button id="btn-backup-db">Backup SQLite</button>
+          </div>
+        </div>
+
+        <div class="card" style="display:grid;gap:10px">
+          <h3 style="margin:0;color:var(--gold)">Anúncio & Recompensa Direta</h3>
+          <div class="row">
+            <input id="bc-text" placeholder="Mensagem de anúncio global para todos os jogadores..." style="flex:1" />
+            <button class="primary" id="btn-bc">Enviar Anúncio</button>
+          </div>
+          <hr style="border:none;border-top:1px solid var(--border);width:100%" />
+          <div class="row">
+            <input id="rw-name" placeholder="Nome do Herói Online" style="flex:1.2" />
+            <input id="rw-gold" type="number" placeholder="Ouro" value="500" style="flex:0.7" />
+            <input id="rw-xp" type="number" placeholder="XP" value="200" style="flex:0.7" />
+            <button class="success" id="btn-give">Enviar</button>
+          </div>
+          <div id="db-stats" style="font-size:12px;color:var(--muted)"></div>
+        </div>
+      </section>
+
+      <section class="grid-2">
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--gold)">Jogadores Online</h3>
+          <table>
+            <thead><tr><th>Herói</th><th>Classe</th><th>Lv</th><th>Ouro</th><th>Pos</th><th>Ação</th></tr></thead>
+            <tbody id="tbl-online"></tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-top:0;color:var(--gold)">Banco de Personagens (SQLite)</h3>
+          <table>
+            <thead><tr><th>Herói</th><th>Conta</th><th>Lv</th><th>Ouro</th><th>Status</th><th>Ação</th></tr></thead>
+            <tbody id="tbl-chars"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3 style="margin-top:0;color:var(--gold)">Logs de Auditoria (Database)</h3>
+        <table>
+          <thead><tr><th>Hora</th><th>Ator</th><th>Ação</th><th>Alvo</th><th>Detalhes</th></tr></thead>
+          <tbody id="tbl-audit"></tbody>
+        </table>
+      </section>
+    </main>
+
+    <script>
+      let adminKey = localStorage.getItem('eldoria_adm_key') || 'eldoria-admin-2026';
+      document.getElementById('admin-key-in').value = adminKey;
+
+      async function api(path, method = 'GET', body = null) {
+        const res = await fetch('/api/admin' + path, {
+          method,
+          headers: { 'Content-Type': 'application/json', 'x-admin-key': adminKey },
+          body: body ? JSON.stringify(body) : null,
+        });
+        return res.json();
+      }
+
+      async function loadOverview() {
+        const data = await api('/overview');
+        if (!data.ok) {
+          document.getElementById('auth-gate').classList.remove('hidden');
+          document.getElementById('auth-err').textContent = data.error || 'Não autorizado';
+          return;
+        }
+        document.getElementById('auth-gate').classList.add('hidden');
+        const t = data.telemetry;
+        document.getElementById('kpis').innerHTML = [
+          ['Jogadores Online', t.onlineCount],
+          ['Monstros Vivos', `${t.aliveMonsters}/${t.totalMonsters}`],
+          ['Uptime', `${t.uptimeSec}s`],
+          ['Memória RSS', `${t.memoryMb} MB`],
+          ['Contas DB', data.tableStats.accounts],
+          ['Personagens DB', data.tableStats.characters],
+        ].map(([l, v]) => `<div class="card"><div class="kpi-lbl">${l}</div><div class="kpi-val">${v}</div></div>`).join('');
+
+        document.getElementById('cfg-xp').value = data.settings.xpRate;
+        document.getElementById('cfg-drop').value = data.settings.dropRate;
+        document.getElementById('cfg-motd').value = data.settings.motd;
+        document.getElementById('cfg-maint').checked = data.settings.maintenanceMode;
+        document.getElementById('srv-status').textContent = data.settings.maintenanceMode ? 'MANUTENÇÃO' : 'ONLINE';
+        document.getElementById('srv-status').className = 'pill ' + (data.settings.maintenanceMode ? 'pill-off' : 'pill-on');
+        document.getElementById('db-stats').textContent =
+          `SQLite WAL • Itens no inventário: ${data.tableStats.inventory_items} • Logs de auditoria: ${data.tableStats.audit_logs}`;
+
+        document.getElementById('tbl-online').innerHTML = data.onlinePlayers.map((p) => `
+          <tr>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.heroClass}</td>
+            <td>${p.level}</td>
+            <td>${p.gold}</td>
+            <td>${p.x}, ${p.y}</td>
+            <td><button class="danger" onclick="kickPlayer('${p.id}')">Kick</button></td>
+          </tr>
+        `).join('') || '<tr><td colspan="6">Nenhum jogador online.</td></tr>';
+
+        document.getElementById('tbl-chars').innerHTML = data.allCharacters.map((c) => {
+          const banned = c.banned_until > Date.now();
+          return `<tr>
+            <td><strong>${c.name}</strong></td>
+            <td>${c.username}</td>
+            <td>${c.level}</td>
+            <td>${c.gold}</td>
+            <td>${banned ? '<span style="color:var(--red)">Banido</span>' : '<span style="color:var(--green)">Ativo</span>'}</td>
+            <td><button class="${banned ? 'success' : 'danger'}" onclick="toggleBan('${c.account_id}', ${banned ? 0 : 24})">${banned ? 'Desbanir' : 'Ban 24h'}</button></td>
+          </tr>`;
+        }).join('');
+
+        document.getElementById('tbl-audit').innerHTML = data.auditLogs.map((a) => `
+          <tr>
+            <td>${new Date(a.created_at).toLocaleTimeString()}</td>
+            <td>${a.actor}</td>
+            <td><strong>${a.action}</strong></td>
+            <td>${a.target}</td>
+            <td>${a.details}</td>
+          </tr>
+        `).join('');
+      }
+
+      window.kickPlayer = async (playerId) => { await api('/kick', 'POST', { playerId }); loadOverview(); };
+      window.toggleBan = async (accountId, hours) => { await api('/ban', 'POST', { accountId, hours, reason: 'Painel Admin' }); loadOverview(); };
+
+      document.getElementById('btn-login-adm').onclick = () => {
+        adminKey = document.getElementById('admin-key-in').value.trim();
+        localStorage.setItem('eldoria_adm_key', adminKey);
+        loadOverview();
+      };
+      document.getElementById('btn-refresh').onclick = loadOverview;
+      document.getElementById('btn-save-cfg').onclick = async () => {
+        await api('/settings', 'POST', {
+          xpRate: Number(document.getElementById('cfg-xp').value),
+          dropRate: Number(document.getElementById('cfg-drop').value),
+          motd: document.getElementById('cfg-motd').value,
+          maintenanceMode: document.getElementById('cfg-maint').checked,
+        });
+        loadOverview();
+      };
+      document.getElementById('btn-bc').onclick = async () => {
+        const text = document.getElementById('bc-text').value;
+        if (text) { await api('/broadcast', 'POST', { text }); document.getElementById('bc-text').value = ''; loadOverview(); }
+      };
+      document.getElementById('btn-give').onclick = async () => {
+        await api('/give', 'POST', {
+          charName: document.getElementById('rw-name').value,
+          gold: Number(document.getElementById('rw-gold').value),
+          xp: Number(document.getElementById('rw-xp').value),
+        });
+        loadOverview();
+      };
+      document.getElementById('btn-save-all').onclick = async () => { await api('/action', 'POST', { action: 'save_all' }); loadOverview(); };
+      document.getElementById('btn-respawn-boss').onclick = async () => { await api('/action', 'POST', { action: 'respawn_boss' }); loadOverview(); };
+      document.getElementById('btn-backup-db').onclick = async () => {
+        const r = await api('/action', 'POST', { action: 'backup_db' });
+        alert('Backup criado: ' + r.file);
+        loadOverview();
+      };
+
+      setInterval(() => {
+        if (document.getElementById('auth-gate').classList.contains('hidden')) loadOverview();
+      }, 4000);
+      loadOverview();
+    </script>
+  </body>
+</html>

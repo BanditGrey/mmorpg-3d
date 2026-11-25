@@ -1,0 +1,16 @@
+{
+  "name": "mmorpg-vertical-auto",
+  "private": true,
+  "workspaces": [
+    "shared",
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm --workspace=server run dev",
+    "dev:client": "npm --workspace=client run dev",
+    "start": "node server/dist/index.js",
+    "build": "npm --workspace=shared run build && npm --workspace=server run build && npm --workspace=client run build",
+    "typecheck": "npm --workspace=shared run typecheck && npm --workspace=server run typecheck && npm --workspace=client run typecheck"
+  }
+}

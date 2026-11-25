@@ -1,0 +1,21 @@
+{
+  "name": "@mmorpg/client",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@mmorpg/shared": "*",
+    "@types/three": "^0.187.0",
+    "pixi.js": "^8.6.6",
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2",
+    "vite": "^6.0.3"
+  }
+}

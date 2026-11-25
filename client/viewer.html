@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eldoria 3D — Viewer de Aprovação (.GLB)</title>
+    <style>
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: #070a10;
+        color: #f1f5f9;
+        font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        height: 100vh;
+        overflow: hidden;
+      }
+      .sidebar {
+        background: #0d121c;
+        border-right: 1px solid rgba(200, 155, 60, 0.35);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      .sb-head {
+        padding: 12px 14px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.15);
+      }
+      .sb-head h1 {
+        margin: 0 0 6px;
+        font-size: 15px;
+        color: #fbbf24;
+      }
+      .summary-row {
+        font-size: 11px;
+        color: #94a3b8;
+        display: flex;
+        gap: 10px;
+      }
+      .filter-row {
+        display: flex;
+        gap: 4px;
+        padding: 8px 12px;
+        border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+      }
+      .f-btn {
+        flex: 1;
+        background: #172030;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        color: #cbd5e1;
+        border-radius: 6px;
+        padding: 4px 6px;
+        font-size: 10px;
+        cursor: pointer;
+      }
+      .f-btn.active {
+        background: linear-gradient(180deg, #d4a64a, #9a6c1d);
+        color: #0b0e14;
+        font-weight: 700;
+        border-color: #fbbf24;
+      }
+      .model-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .cat-label {
+        font-size: 10px;
+        font-weight: 700;
+        color: #fbbf24;
+        text-transform: uppercase;
+        margin: 8px 4px 2px;
+        letter-spacing: 0.6px;
+      }
+      .m-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 7px 9px;
+        border-radius: 7px;
+        background: rgba(20, 27, 40, 0.85);
+        border: 1px solid rgba(148, 163, 184, 0.16);
+        cursor: pointer;
+        font-size: 12px;
+        color: #e2e8f0;
+        text-align: left;
+      }
+      .m-item:hover { border-color: rgba(251, 191, 36, 0.55); }
+      .m-item.active {
+        border-color: #fbbf24;
+        background: rgba(251, 191, 36, 0.14);
+      }
+      .badge {
+        font-size: 10px;
+        padding: 2px 6px;
+        border-radius: 10px;
+        font-weight: 700;
+      }
+      .badge.approved { background: rgba(34, 197, 94, 0.2); color: #4ade80; }
+      .badge.rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+      .badge.pending { background: rgba(148, 163, 184, 0.15); color: #94a3b8; }
+
+      .stage {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        background: radial-gradient(circle at 50% 40%, #152033 0%, #070a10 85%);
+      }
+      #viewer-canvas {
+        flex: 1;
+        width: 100%;
+        display: block;
+      }
+      .top-bar {
+        position: absolute;
+        top: 12px;
+        left: 14px;
+        right: 14px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        pointer-events: none;
+      }
+      .pill {
+        pointer-events: auto;
+        background: rgba(11, 15, 24, 0.88);
+        border: 1px solid rgba(200, 155, 60, 0.45);
+        border-radius: 10px;
+        padding: 8px 12px;
+        font-size: 12px;
+        backdrop-filter: blur(6px);
+      }
+      .controls-bar {
+        background: #0d121c;
+        border-top: 1px solid rgba(200, 155, 60, 0.35);
+        padding: 10px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .top-bar .btn-row { pointer-events: auto; }
+      .btn-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+      button.act, a.act {
+        background: #1a2436;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: #f1f5f9;
+        border-radius: 7px;
+        padding: 6px 12px;
+        font-size: 12px;
+        cursor: pointer;
+        font-weight: 600;
+      }
+      button.act.active { border-color: #fbbf24; color: #fbbf24; }
+      button.approve { background: #15803d; border-color: #4ade80; color: #fff; }
+      button.reject { background: #991b1b; border-color: #f87171; color: #fff; }
+      button.export { background: linear-gradient(180deg, #d4a64a, #9a6c1d); border-color: #fbbf24; color: #090c12; }
+      input.note-in {
+        background: #131b29;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+        color: #f1f5f9;
+        border-radius: 7px;
+        padding: 6px 10px;
+        font-size: 12px;
+        width: 240px;
+      }
+    </style>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <div class="sb-head">
+        <h1>Viewer de Aprovação 3D</h1>
+        <div class="summary-row" id="summary-counts">Carregando...</div>
+      </div>
+      <div class="filter-row">
+        <button class="f-btn active" data-f="all">Todos</button>
+        <button class="f-btn" data-f="pending">Pendentes</button>
+        <button class="f-btn" data-f="approved">Aprovados</button>
+        <button class="f-btn" data-f="rejected">Reprovados</button>
+      </div>
+      <div class="model-list" id="model-list"></div>
+    </aside>
+
+    <main class="stage">
+      <div class="top-bar">
+        <div class="pill" id="model-info">Selecione um modelo</div>
+        <div class="btn-row">
+          <button class="act" id="btn-wire">Wireframe: OFF</button>
+          <button class="act export" id="btn-export">Exportar Relatório</button>
+          <a href="/" class="act" style="text-decoration:none">Voltar ao Jogo</a>
+        </div>
+      </div>
+
+      <canvas id="viewer-canvas"></canvas>
+
+      <div class="controls-bar">
+        <div class="btn-row" id="anim-clips"></div>
+        <div class="btn-row">
+          <input class="note-in" id="note-input" placeholder="Observação (ex: ajustar asas)..." />
+          <button class="act approve" id="btn-approve">Aprovar</button>
+          <button class="act reject" id="btn-reject">Reprovar</button>
+        </div>
+      </div>
+    </main>
+
+    <script type="module" src="/src/viewer.ts"></script>
+  </body>
+</html>
