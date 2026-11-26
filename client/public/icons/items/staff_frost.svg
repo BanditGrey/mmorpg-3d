@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Cajado Boreal">
+  <defs>
+    <linearGradient id="body" x1=".12" y1=".08" x2=".88" y2=".94"><stop stop-color="#f4f7fa"/><stop offset=".22" stop-color="#b8f2ff"/><stop offset="1" stop-color="#458ebd"/></linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b8f2ff"/><stop offset="1" stop-color="#458ebd"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1b5"/><stop offset=".48" stop-color="#ffc85a"/><stop offset="1" stop-color="#755027"/></linearGradient>
+    <linearGradient id="fluid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#b8f2ff"/><stop offset="1" stop-color="#458ebd"/></linearGradient>
+  </defs>
+  <g fill="url(#body)" stroke="#101827" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="m19 55 23-39" fill="none" stroke="url(#dark)" stroke-width="5" stroke-linecap="round"/><path d="M34 13 42 7 50 13 47 23 37 25 31 19Z"/><path d="m39 15 5-3 4 4-2 5-6 1-3-4Z" fill="#f6fbff" opacity=".78"/></g>
+  <g><circle cx="32" cy="27" r="3.1" fill="none" stroke="#fff" stroke-width="1.3" opacity=".8"/></g>
+  <path d="M12 56h40" stroke="#ffc85a" stroke-width="1" opacity=".42"/>
+</svg>

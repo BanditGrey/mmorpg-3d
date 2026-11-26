@@ -4,7 +4,8 @@ import sys
 import bpy
 from mathutils import Euler, Vector
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_textures import bake_pbr_material
 from blender_heroes import (
     clear_scene,

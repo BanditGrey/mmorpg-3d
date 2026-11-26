@@ -3,7 +3,8 @@ import sys
 import bpy
 from mathutils import Vector
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_sculpt_lib import (
     clear_scene,
     make_pbr_mat,
@@ -16,7 +17,10 @@ from blender_sculpt_lib import (
     render_studio_preview,
 )
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
+PREV_DIR = os.path.join(ROOT_DIR, "references", "monster_previews")
+os.makedirs(OUT_DIR, exist_ok=True)
+os.makedirs(PREV_DIR, exist_ok=True)
 
 
 def build_slime():
@@ -42,7 +46,7 @@ def build_slime():
         body.keyframe_insert("scale", frame=f1)
         push_nla(body, clip, f0, f1)
 
-    render_studio_preview(r"d:\MMORPG\references\preview_slime.png")
+    render_studio_preview(os.path.join(PREV_DIR, "preview_slime.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "slime.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported slime.glb")
 
@@ -100,7 +104,7 @@ def build_wolf():
     for j in (body, head, tail, fl, fr, bl, br):
         push_nla(j, "Attack", 70, 88)
 
-    render_studio_preview(r"d:\MMORPG\references\preview_wolf.png")
+    render_studio_preview(os.path.join(PREV_DIR, "preview_wolf.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "wolf.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported wolf.glb")
 
@@ -134,7 +138,7 @@ def build_orc():
     sculpt_battleaxe("OrcBattleaxe", m_iron, m_red, parent=arm_r, loc=(0.04, -0.08, -0.40), rot=(1.15, 0, 0))
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r)
-    render_studio_preview(r"d:\MMORPG\references\preview_orc.png")
+    render_studio_preview(os.path.join(PREV_DIR, "preview_orc.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "orc.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported orc.glb")
 
@@ -165,7 +169,7 @@ def build_boss_golem():
         sculpt_jagged_rock(f"GolemLeg_{n}", radius=0.26, seed=120, mat=m_rock, parent=j, loc=(0, 0, -0.45), scale=(0.9, 0.9, 1.8))
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r, style="heavy")
-    render_studio_preview(r"d:\MMORPG\references\preview_boss_golem.png")
+    render_studio_preview(os.path.join(PREV_DIR, "preview_boss_golem.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "boss_golem.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported boss_golem.glb")
 

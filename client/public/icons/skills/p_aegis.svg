@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Égide Solar">
+<defs><radialGradient id="glow"><stop stop-color="#fbbf24" stop-opacity=".48"/><stop offset="1" stop-color="#fbbf24" stop-opacity="0"/></radialGradient></defs>
+<circle cx="32" cy="32" r="29" fill="url(#glow)"/><g fill="none" stroke="#fbbf24" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 7 51 16v15c0 12-8 20-19 26-11-6-19-14-19-26V16Z"/><path d="m32 17 3 10 10 5-10 4-3 11-4-11-9-4 9-5Z"/></g>
+</svg>

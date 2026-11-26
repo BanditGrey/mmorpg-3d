@@ -2,7 +2,8 @@ import os
 import sys
 import bpy
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_sculpt_lib import (
     clear_scene,
     make_pbr_mat,
@@ -14,7 +15,8 @@ from blender_sculpt_lib import (
     render_studio_preview,
 )
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
+os.makedirs(OUT_DIR, exist_ok=True)
 
 
 def build_warrior():
@@ -179,7 +181,7 @@ def build_warrior():
     sculpt_greatsword("RunicGreatsword", m_steel, m_gold, parent=arm_r, loc=(0.02, -0.08, -0.40), rot=(1.15, 0, 0))
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r)
-    render_studio_preview(r"d:\MMORPG\references\preview_warrior.png")
+    render_studio_preview(os.path.join(ROOT_DIR, "references", "preview_warrior.png"))
     bpy.ops.export_scene.gltf(
         filepath=os.path.join(OUT_DIR, "warrior.glb"),
         export_format="GLB",

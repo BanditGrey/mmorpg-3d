@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Núcleo Ancestral">
+  <defs>
+    <linearGradient id="body" x1=".12" y1=".08" x2=".88" y2=".94"><stop stop-color="#f4f7fa"/><stop offset=".22" stop-color="#ffc76b"/><stop offset="1" stop-color="#895422"/></linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#ffc76b"/><stop offset="1" stop-color="#895422"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1b5"/><stop offset=".48" stop-color="#c38aff"/><stop offset="1" stop-color="#755027"/></linearGradient>
+    <linearGradient id="fluid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#ffc76b"/><stop offset="1" stop-color="#895422"/></linearGradient>
+  </defs>
+  <g fill="url(#body)" stroke="#101827" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="m32 5 17 13-3 27-14 13-14-13-3-27Z"/><path d="m32 11 10 10-4 20-6 8-6-8-4-20Z" fill="#fff" opacity=".26"/><path d="m32 18 4 8-4 8-4-8Z" fill="#fff" opacity=".75"/></g>
+  <g><path d="m32 22 1.7 3.3 3.7.5-2.7 2.5.7 3.6-3.4-1.8-3.3 1.8.6-3.6-2.6-2.5 3.7-.5Z" fill="#fff" opacity=".78"/></g>
+  <path d="M12 56h40" stroke="#c38aff" stroke-width="1" opacity=".42"/>
+</svg>

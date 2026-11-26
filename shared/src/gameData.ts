@@ -1219,7 +1219,7 @@ export const ITEM_TEMPLATES: Record<string, ItemTemplate> = {
   // Gloves
   gloves_leather: { id: 'gloves_leather', name: 'Luvas de Couro', kind: 'equip', slot: 'gloves', rarity: 'common', iconKey: 'gloves', atkBonus: 4, defBonus: 3 },
   gloves_scout: { id: 'gloves_scout', name: 'Luvas do Batedor', kind: 'equip', slot: 'gloves', rarity: 'uncommon', iconKey: 'gloves', atkBonus: 9, defBonus: 5, critBonus: 0.02 },
-  gloves_warlord: { id: 'gloves_warlord', name: 'Manoplas do Titã', kind: 'equip', slot: 'gloves', rarity: 'epic', atkBonus: 16, defBonus: 10, critBonus: 0.05 },
+  gloves_warlord: { id: 'gloves_warlord', name: 'Manoplas do Titã', kind: 'equip', slot: 'gloves', rarity: 'epic', iconKey: 'gloves', atkBonus: 16, defBonus: 10, critBonus: 0.05 },
   gloves_abyss: { id: 'gloves_abyss', name: 'Manoplas Abissais', kind: 'equip', slot: 'gloves', rarity: 'mythic', iconKey: 'gloves', atkBonus: 48, defBonus: 28, critBonus: 0.09 },
   // Boots
   boots_swift: { id: 'boots_swift', name: 'Botas Ágeis', kind: 'equip', slot: 'boots', rarity: 'uncommon', iconKey: 'boots', defBonus: 6, hpBonus: 35, critBonus: 0.03 },

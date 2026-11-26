@@ -3,7 +3,8 @@ import sys
 import bpy
 from mathutils import Vector
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_sculpt_lib import (
     clear_scene,
     make_pbr_mat,
@@ -14,8 +15,10 @@ from blender_sculpt_lib import (
     render_studio_preview,
 )
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
-PREV_DIR = r"C:\Users\Daniel\.gemini\antigravity\brain\16504084-b707-4cdd-b15f-6ee76f7d8440"
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
+os.makedirs(OUT_DIR, exist_ok=True)
+PREV_DIR = os.path.join(ROOT_DIR, "references", "monster_previews")
+os.makedirs(PREV_DIR, exist_ok=True)
 
 
 def build_spider():

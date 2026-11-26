@@ -4,7 +4,8 @@ import bpy
 import bmesh
 from mathutils import Euler, Vector
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 

@@ -83,7 +83,7 @@ export class GameClient {
     this.lastName = name;
     this.heroClass = heroClass;
     this.lastUsername = username ?? name;
-    this.lastPassword = password ?? 'guest1234';
+    this.lastPassword = password ?? '';
     if (this.reconnectTimer) {
       clearTimeout(this.reconnectTimer);
       this.reconnectTimer = null;

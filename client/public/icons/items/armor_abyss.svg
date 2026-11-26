@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Armadura Abissal">
+  <defs>
+    <linearGradient id="body" x1=".12" y1=".08" x2=".88" y2=".94"><stop stop-color="#f4f7fa"/><stop offset=".22" stop-color="#bb73ff"/><stop offset="1" stop-color="#21143f"/></linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#bb73ff"/><stop offset="1" stop-color="#21143f"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1b5"/><stop offset=".48" stop-color="#ff70c7"/><stop offset="1" stop-color="#755027"/></linearGradient>
+    <linearGradient id="fluid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#bb73ff"/><stop offset="1" stop-color="#21143f"/></linearGradient>
+  </defs>
+  <g fill="url(#body)" stroke="#101827" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="m18 15 9-4 5 6 5-6 9 4 8 10-7 7-2 20H19l-2-20-7-7Z"/><path d="m26 20 6 7 6-7 3 24H23Z" fill="url(#dark)" opacity=".78"/><path d="M23 34h18" fill="none" stroke="url(#gold)" stroke-width="2.5"/></g>
+  <g><path d="M28 26h8M32 22v8" stroke="#fff" stroke-width="1.4" opacity=".8"/></g>
+  <path d="M12 56h40" stroke="#ff70c7" stroke-width="1" opacity=".42"/>
+</svg>

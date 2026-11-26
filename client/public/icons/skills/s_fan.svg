@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Leque Sombrio">
+<defs><radialGradient id="glow"><stop stop-color="#8b5cf6" stop-opacity=".48"/><stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/></radialGradient></defs>
+<circle cx="32" cy="32" r="29" fill="url(#glow)"/><g fill="none" stroke="#8b5cf6" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M32 48 12 20m20 28-7-33m7 33 7-33m-7 33 20-28"/><path d="M25 49a8 8 0 0 0 14 0"/></g>
+</svg>
