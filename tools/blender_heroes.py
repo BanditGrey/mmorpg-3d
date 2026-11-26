@@ -5,10 +5,11 @@ import bpy
 import bmesh
 from mathutils import Euler
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_textures import bake_pbr_material
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
 os.makedirs(OUT_DIR, exist_ok=True)
 
 

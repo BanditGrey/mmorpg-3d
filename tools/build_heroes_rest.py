@@ -3,7 +3,8 @@ import sys
 import bpy
 from mathutils import Euler
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_sculpt_lib import (
     clear_scene,
     make_pbr_mat,
@@ -15,7 +16,8 @@ from blender_sculpt_lib import (
     render_studio_preview,
 )
 
-OUT_DIR = r"d:\MMORPG\client\public\models"
+OUT_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
+os.makedirs(OUT_DIR, exist_ok=True)
 
 
 def build_mage():
@@ -64,7 +66,7 @@ def build_mage():
     sculpt_cross_section("CrystalOrb", [(0.02, 0.02, 0, 0), (0.11, 0.11, 0, 0.10), (0.11, 0.11, 0, 0.20), (0.02, 0.02, 0, 0.30)], segments=10, mat=m_glow, parent=arm_r, loc=(0, -0.26, 0.50), subsurf=0)
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r, style="caster")
-    render_studio_preview(r"d:\MMORPG\references\preview_mage.png")
+    render_studio_preview(os.path.join(ROOT_DIR, "references", "preview_mage.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "mage.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported mage.glb")
 
@@ -104,7 +106,7 @@ def build_paladin():
     sculpt_cross_section("HammerHead", [(0.10, 0.10, 0, -0.13), (0.12, 0.12, 0, 0.0), (0.10, 0.10, 0, 0.13)], segments=6, mat=m_gold, parent=arm_r, loc=(0.04, -0.72, -0.06), rot=(0, 1.57, 0), subsurf=0)
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r, style="melee")
-    render_studio_preview(r"d:\MMORPG\references\preview_paladin.png")
+    render_studio_preview(os.path.join(ROOT_DIR, "references", "preview_paladin.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "paladin.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported paladin.glb")
 
@@ -139,7 +141,7 @@ def build_archer():
     sculpt_greatsword("EnergyArrow", m_glow, m_leather, parent=arm_r, loc=(0, -0.08, -0.42), rot=(1.57, 0, 0)).scale = (0.6, 0.6, 0.65)
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r, style="archer")
-    render_studio_preview(r"d:\MMORPG\references\preview_archer.png")
+    render_studio_preview(os.path.join(ROOT_DIR, "references", "preview_archer.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "archer.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported archer.glb")
 
@@ -174,7 +176,7 @@ def build_assassin():
         d.scale = (0.7, 0.7, 0.55)
 
     animate_biped(pelvis, arm_l, arm_r, leg_l, leg_r, style="dual")
-    render_studio_preview(r"d:\MMORPG\references\preview_assassin.png")
+    render_studio_preview(os.path.join(ROOT_DIR, "references", "preview_assassin.png"))
     bpy.ops.export_scene.gltf(filepath=os.path.join(OUT_DIR, "assassin.glb"), export_format="GLB", export_animations=True, export_nla_strips=True, export_apply=True)
     print("[Blender 5.2 MaxQuality] Exported assassin.glb")
 

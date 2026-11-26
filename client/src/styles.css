@@ -278,7 +278,24 @@ body {
 }
 
 .target-frame.visible {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.target-portrait {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  object-fit: cover;
+  border: 1px solid rgba(248, 113, 113, 0.65);
+  border-radius: 6px;
+  background: #111827;
+}
+
+.target-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .target-header {
@@ -368,7 +385,9 @@ body {
   padding: 4px 8px;
   font-size: 11px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
   justify-content: center;
   max-width: 44%;
   cursor: pointer;
@@ -376,6 +395,12 @@ body {
     inset 0 1px 0 rgba(243, 211, 122, 0.14),
     0 4px 12px rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(4px);
+}
+
+.quest-pill-copy {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .quest-pill strong {
@@ -433,6 +458,14 @@ body.left-handed .action-deck {
     inset 0 -2px 5px rgba(0, 0, 0, 0.85),
     0 3px 8px rgba(0, 0, 0, 0.7);
   transition: transform 0.1s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.skill-btn .skill-icon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 3px currentColor);
+  pointer-events: none;
 }
 
 .skill-btn:active {
@@ -1025,6 +1058,9 @@ body.left-handed .action-deck {
 }
 
 .nav-mini {
+  flex-direction: row;
+  align-items: center;
+  gap: 3px;
   min-height: 26px !important;
   padding: 2px 6px !important;
   font-size: 10px !important;
@@ -1299,6 +1335,9 @@ body.left-handed .action-deck {
 }
 
 .wave-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   position: absolute;
   top: 94px;
   left: 50%;
@@ -1326,6 +1365,9 @@ body.left-handed .action-deck {
 }
 
 .event-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   background: rgba(16, 18, 28, 0.85);
   border: 1px solid rgba(251, 191, 36, 0.45);
   border-radius: 14px;
@@ -1336,6 +1378,41 @@ body.left-handed .action-deck {
   white-space: nowrap;
   align-self: flex-start;
   pointer-events: auto;
+}
+
+.hud-glyph {
+  width: 15px;
+  height: 15px;
+  object-fit: contain;
+  vertical-align: middle;
+  flex: 0 0 auto;
+}
+
+.nav-glyph {
+  width: 13px;
+  height: 13px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.boss-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.boss-name .hud-glyph {
+  width: 17px;
+  height: 17px;
+}
+
+.boss-portrait {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid rgba(251, 113, 133, 0.6);
 }
 
 .item-tooltip {
@@ -1555,7 +1632,18 @@ body.left-handed .action-deck {
   font-weight: 700;
 }
 
+.gold-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: #fbbf24;
+  white-space: nowrap;
+}
+
 .cp-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
   color: #fbbf24;
   text-shadow: 0 1px 2px #000;
 }
@@ -1599,3 +1687,59 @@ body.left-handed .action-deck {
     linear-gradient(180deg, rgba(4, 6, 12, 0.55) 0%, rgba(4, 6, 12, 0.82) 100%),
     url('/concept-bg.jpg') center/cover no-repeat !important;
 }
+
+/* Illustrated map selection cards in the world travel sheet. */
+.map-travel-card {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 7px;
+  overflow: hidden;
+  padding: 6px;
+  border-color: color-mix(in srgb, var(--map-accent, #c89b3c) 55%, transparent);
+  text-align: left;
+}
+.map-travel-card__image {
+  display: block;
+  width: 100%;
+  height: 112px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #080b11;
+}
+.map-travel-card__details {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2px 6px;
+  align-items: center;
+  padding: 0 3px 2px;
+}
+.map-travel-card__details strong { color: #f8fafc; }
+.map-travel-card__details small { grid-column: 1 / -1; color: #94a3b8; }
+.map-travel-card__details em { grid-column: 2; grid-row: 1; font-size: 11px; font-style: normal; }
+
+/* Bestiary portraits reuse the approved monster concepts at card scale. */
+.bestiary-card {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  min-height: 82px;
+  overflow: hidden;
+}
+.bestiary-card__portrait {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 7px;
+  background: radial-gradient(circle, #263244, #090d15 72%);
+}
+.bestiary-card__body { min-width: 0; }
+.bestiary-card__heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 5px;
+}
+.bestiary-card__heading strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bestiary-card__stats { margin-top: 5px; color: #94a3b8; font-size: 10px; line-height: 1.45; }

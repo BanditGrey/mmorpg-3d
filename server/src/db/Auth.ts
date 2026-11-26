@@ -1,7 +1,25 @@
 import crypto from 'node:crypto';
 
-const SECRET = process.env.SESSION_SECRET ?? crypto.randomBytes(32).toString('hex');
-export const ADMIN_KEY = process.env.ADMIN_KEY ?? 'eldoria-admin-2026';
+const configuredSessionSecret = process.env.SESSION_SECRET;
+if (process.env.NODE_ENV === 'production' && (!configuredSessionSecret || configuredSessionSecret.length < 32)) {
+  throw new Error('SESSION_SECRET must be configured with at least 32 characters in production');
+}
+const SECRET = configuredSessionSecret ?? crypto.randomBytes(32).toString('hex');
+const configuredAdminKey = process.env.ADMIN_KEY;
+if (process.env.NODE_ENV === 'production' && (!configuredAdminKey || configuredAdminKey.length < 32)) {
+  throw new Error('ADMIN_KEY must be configured with at least 32 characters in production');
+}
+if (!configuredAdminKey) {
+  console.warn('[security] ADMIN_KEY is unset; admin API is disabled in this development process.');
+}
+export const ADMIN_KEY = configuredAdminKey ?? null;
+
+export function adminKeyMatches(candidate: string | undefined): boolean {
+  if (!ADMIN_KEY || !candidate) return false;
+  const provided = Buffer.from(candidate);
+  const expected = Buffer.from(ADMIN_KEY);
+  return provided.length === expected.length && crypto.timingSafeEqual(provided, expected);
+}
 
 export function hashPassword(password: string): string {
   const salt = crypto.randomBytes(16).toString('hex');

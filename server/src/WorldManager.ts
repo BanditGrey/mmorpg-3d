@@ -125,9 +125,15 @@ export class WorldManager {
   public addPlayer(ws: WebSocket, msg: Extract<ClientMessage, { type: 'join' }>): ServerPlayer | null {
     const id = this.nextId('p');
     const heroClass = msg.heroClass in CLASS_DEFS ? msg.heroClass : 'warrior';
-    const cleanName = (msg.name || 'Aventureiro').trim().slice(0, 16) || 'Aventureiro';
-    const username = (msg.username || cleanName).trim().slice(0, 20);
-    const password = msg.password || 'guest1234';
+    const cleanName = (typeof msg.name === 'string' ? msg.name : 'Aventureiro')
+      .replace(/[<>\u0000-\u001f\u007f]/g, '')
+      .trim()
+      .slice(0, 16) || 'Aventureiro';
+    const username = (typeof msg.username === 'string' ? msg.username : cleanName)
+      .replace(/[<>\u0000-\u001f\u007f]/g, '')
+      .trim()
+      .slice(0, 20);
+    const password = typeof msg.password === 'string' ? msg.password : '';
 
     const auth = this.db.registerOrLogin(username, password);
     if (!auth.ok) {

@@ -84,7 +84,7 @@
       <div class="card" style="width:340px;display:grid;gap:12px">
         <h2 style="margin:0;color:var(--gold)">Admin Control Center</h2>
         <label>Chave Administrativa (ADMIN_KEY)</label>
-        <input id="admin-key-in" type="password" value="eldoria-admin-2026" />
+        <input id="admin-key-in" type="password" autocomplete="current-password" placeholder="Informe ADMIN_KEY configurada no servidor" />
         <button class="primary" id="btn-login-adm">Conectar ao Painel</button>
         <div id="auth-err" style="color:var(--red);font-size:12px"></div>
       </div>
@@ -176,7 +176,7 @@
     </main>
 
     <script>
-      let adminKey = localStorage.getItem('eldoria_adm_key') || 'eldoria-admin-2026';
+      let adminKey = localStorage.getItem('eldoria_adm_key') || '';
       document.getElementById('admin-key-in').value = adminKey;
 
       async function api(path, method = 'GET', body = null) {

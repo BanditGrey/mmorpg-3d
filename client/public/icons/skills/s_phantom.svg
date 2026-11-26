@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Dança Fantasma">
+<defs><radialGradient id="glow"><stop stop-color="#e879f9" stop-opacity=".48"/><stop offset="1" stop-color="#e879f9" stop-opacity="0"/></radialGradient></defs>
+<circle cx="32" cy="32" r="29" fill="url(#glow)"/><g fill="none" stroke="#e879f9" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 47c-3-21 5-34 18-34s21 13 18 34l-8-5-5 8-5-5-5 5-5-8Z"/><path d="M24 31h2m12 0h2M28 39h8"/></g>
+</svg>

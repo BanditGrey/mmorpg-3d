@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Fenda Brutal">
+<defs><radialGradient id="glow"><stop stop-color="#fb7185" stop-opacity=".48"/><stop offset="1" stop-color="#fb7185" stop-opacity="0"/></radialGradient></defs>
+<circle cx="32" cy="32" r="29" fill="url(#glow)"/><g fill="none" stroke="#fb7185" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 45 47 13l5 6-32 35-9-1Z"/><path d="m19 37 9 8M26 29l9 8M33 22l9 8"/></g>
+</svg>

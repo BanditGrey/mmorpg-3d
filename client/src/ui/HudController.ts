@@ -33,6 +33,26 @@ import { HeroPreview3D } from '../engine/HeroPreview3D.js';
 import type { World3DView } from '../engine/World3DView.js';
 import type { GameClient } from '../net/GameClient.js';
 
+function escapeHtml(value: unknown): string {
+  return String(value).replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+  })[char]!);
+}
+
+function setMonsterPortrait(img: HTMLImageElement | null, templateId: string) {
+  if (!img) return;
+  if (!/^[a-z0-9_]+$/i.test(templateId) || !MONSTER_TEMPLATES[templateId]) {
+    img.hidden = true;
+    return;
+  }
+  if (img.dataset.templateId === templateId) return;
+  img.dataset.templateId = templateId;
+  img.hidden = false;
+  img.src = `/portraits/monsters/${templateId}.jpg`;
+  img.alt = MONSTER_TEMPLATES[templateId].name;
+  img.onerror = () => { img.hidden = true; };
+}
+
 type SheetTab = 'hero' | 'bag' | 'skills' | 'social' | 'menu' | 'chat' | 'auto_cfg' | 'map' | null;
 
 export class HudController {
@@ -71,10 +91,10 @@ export class HudController {
                 <div class="vitals-bars">
                   <div class="player-name-line">
                     <span id="hud-name">Aventureiro</span>
-                    <span id="hud-gold" style="color:#fbbf24">0 Ouro</span>
+                    <span id="hud-gold" class="gold-chip"><img src="/icons/ui/coin.svg" alt="" class="hud-glyph" /><span id="hud-gold-value">0 Ouro</span></span>
                   </div>
                   <div class="player-power-line">
-                    <span id="hud-cp" class="cp-chip">⚔ 0 CP</span>
+                    <span id="hud-cp" class="cp-chip"><img src="/icons/ui/power.svg" alt="" class="hud-glyph" /><span id="hud-cp-value">0 CP</span></span>
                     <span id="hud-tier" class="tier-chip">Aventureiro</span>
                   </div>
                   <div class="bar-track bar-with-txt"><div class="bar-fill bar-hp" id="hud-hp-bar" style="width:100%"></div><span class="bar-txt" id="hud-hp-txt"></span></div>
@@ -85,10 +105,10 @@ export class HudController {
             </div>
 
             <div class="quest-pill quest-top-tracker" id="quest-pill">
-              <strong id="quest-title">Missão</strong>
-              <span id="quest-prog">0/0</span>
+              <img src="/icons/ui/quest.svg" alt="" class="hud-glyph" />
+              <div class="quest-pill-copy"><strong id="quest-title">Missão</strong><span id="quest-prog">0/0</span></div>
             </div>
-            <div class="event-pill" id="event-pill" title="Evento Global ativo (alterna a cada 30 min)">✦ Evento</div>
+            <div class="event-pill" id="event-pill" title="Evento Global ativo (alterna a cada 30 min)"><img src="/icons/ui/event.svg" alt="" class="hud-glyph" /><span id="event-pill-name">Evento</span></div>
             <div id="buffs-strip" style="display:flex;gap:4px;align-items:center;flex-wrap:wrap"></div>
 
             <div class="world-pill">
@@ -100,30 +120,33 @@ export class HudController {
               </div>
               <div style="display:flex;align-items:center;gap:4px">
                 <span class="map-chip" id="hud-ch" style="padding:3px 7px;font-size:10px;color:#60a5fa">CH 1</span>
-                <button class="icon-btn-sm" id="btn-pet-hud" title="Alternar Mascote Auto-Loot" style="font-size:10px;padding:0 6px;width:auto">Pet OFF</button>
-                <button class="icon-btn-sm" id="btn-dimmer" title="Economia de Bateria">🌙</button>
-                <button class="icon-btn-sm" id="btn-cfg-top" title="Configurações">⚙</button>
+                <button class="icon-btn-sm" id="btn-pet-hud" title="Alternar Mascote Auto-Loot" style="font-size:10px;padding:0 6px;width:auto"><img src="/icons/ui/pet.svg" alt="" class="hud-glyph" /><span>Pet OFF</span></button>
+                <button class="icon-btn-sm" id="btn-dimmer" title="Economia de Bateria"><img src="/icons/ui/moon.svg" alt="" class="hud-glyph" /></button>
+                <button class="icon-btn-sm" id="btn-cfg-top" title="Configurações"><img src="/icons/ui/settings.svg" alt="" class="hud-glyph" /></button>
               </div>
             </div>
           </div>
 
           <div class="target-frame" id="target-frame">
-            <div class="target-header">
-              <span id="target-name">Alvo</span>
-              <span id="target-hp-txt">0/0</span>
+            <img id="target-portrait" class="target-portrait" alt="" />
+            <div class="target-content">
+              <div class="target-header">
+                <span id="target-name">Alvo</span>
+                <span id="target-hp-txt">0/0</span>
+              </div>
+              <div class="bar-track"><div class="bar-fill bar-hp" id="target-hp-bar" style="width:100%"></div></div>
             </div>
-            <div class="bar-track"><div class="bar-fill bar-hp" id="target-hp-bar" style="width:100%"></div></div>
           </div>
 
           <div class="boss-bar-wrap" id="boss-bar" style="display:none">
             <div class="boss-bar-header">
-              <span id="boss-bar-name">CHEFE</span>
+              <span class="boss-name"><img src="/icons/ui/boss.svg" alt="" class="hud-glyph" /><img id="boss-portrait" class="boss-portrait" alt="" /><span id="boss-name-text">CHEFE</span></span>
               <span id="boss-bar-hp-txt">0/0</span>
             </div>
             <div class="bar-track boss-track"><div class="bar-fill boss-fill" id="boss-bar-fill" style="width:100%"></div></div>
           </div>
 
-          <div class="wave-banner" id="wave-banner" style="display:none"></div>
+          <div class="wave-banner" id="wave-banner" style="display:none"><img src="/icons/ui/wave.svg" alt="" class="hud-glyph" /><span id="wave-banner-text"></span></div>
         </div>
 
         <div class="hud-bottom">
@@ -134,10 +157,10 @@ export class HudController {
           <div class="arpg-dock" id="action-deck">
             <div class="dock-wing dock-left">
               <div class="dock-mini-row">
-                <button class="nav-btn nav-mini" data-sheet="hero">[H] Herói<span class="red-dot" id="dot-hero"></span></button>
-                <button class="nav-btn nav-mini" data-sheet="bag">[B] Bolsa<span class="red-dot" id="dot-bag"></span></button>
-                <button class="nav-btn nav-mini" data-sheet="skills">[K] Build</button>
-                <button class="nav-btn nav-mini" data-sheet="map">[M] Mapa</button>
+                <button class="nav-btn nav-mini" data-sheet="hero"><img src="/icons/ui/hero.svg" alt="" class="nav-glyph" />[H] Herói<span class="red-dot" id="dot-hero"></span></button>
+                <button class="nav-btn nav-mini" data-sheet="bag"><img src="/icons/ui/bag.svg" alt="" class="nav-glyph" />[B] Bolsa<span class="red-dot" id="dot-bag"></span></button>
+                <button class="nav-btn nav-mini" data-sheet="skills"><img src="/icons/ui/skills.svg" alt="" class="nav-glyph" />[K] Build</button>
+                <button class="nav-btn nav-mini" data-sheet="map"><img src="/icons/ui/map.svg" alt="" class="nav-glyph" />[M] Mapa</button>
               </div>
               <div id="skill-slots-left" class="skill-group"></div>
             </div>
@@ -155,18 +178,20 @@ export class HudController {
 
             <div class="dock-wing dock-right">
               <div class="dock-mini-row">
-                <button class="auto-btn auto-mini" id="btn-auto">AUTO <span id="auto-sub">OFF</span></button>
-                <button class="icon-btn-sm" id="btn-auto-gear" title="Configurar Auto" style="height:26px;min-width:26px;font-size:11px">⚙</button>
-                <button class="nav-btn nav-mini" data-sheet="social">Social</button>
-                <button class="nav-btn nav-mini" data-sheet="menu">Menu<span class="red-dot" id="dot-menu"></span></button>
+                <button class="auto-btn auto-mini" id="btn-auto"><img src="/icons/ui/auto.svg" alt="" class="nav-glyph" />AUTO <span id="auto-sub">OFF</span></button>
+                <button class="icon-btn-sm" id="btn-auto-gear" title="Configurar Auto" style="height:26px;min-width:26px;font-size:11px"><img src="/icons/ui/settings.svg" alt="" class="hud-glyph" /></button>
+                <button class="nav-btn nav-mini" data-sheet="social"><img src="/icons/ui/social.svg" alt="" class="nav-glyph" />Social</button>
+                <button class="nav-btn nav-mini" data-sheet="menu"><img src="/icons/ui/menu.svg" alt="" class="nav-glyph" />Menu<span class="red-dot" id="dot-menu"></span></button>
               </div>
               <div class="skill-group">
                 <div id="skill-slots-right" class="skill-group"></div>
                 <button class="skill-btn pot-btn" id="btn-pot-hp" title="Poção HP [Q]">
+                  <img class="skill-icon" src="/icons/items/pot_hp_small.svg" alt="" />
                   <span style="color:#fca5a5">HP</span>
                   <span id="pot-hp-count" style="font-size:9px">0</span>
                 </button>
                 <button class="skill-btn pot-btn" id="btn-pot-mp" title="Poção MP [E]">
+                  <img class="skill-icon" src="/icons/items/pot_mp_small.svg" alt="" />
                   <span style="color:#93c5fd">MP</span>
                   <span id="pot-mp-count" style="font-size:9px">0</span>
                 </button>
@@ -376,6 +401,7 @@ export class HudController {
     const makeBtn = (s: (typeof SKILLS)[number], idx: number) => `
       <button class="skill-btn" data-skill="${s.id}" style="border-color:${s.color}" title="${s.name} [${idx + 1}]">
         <span class="sk-key">${idx + 1}</span>
+        <img class="skill-icon" src="/icons/skills/${s.id}.svg" alt="" />
         <span style="max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.name.split(' ')[0]}</span>
         <span style="font-size:8px;color:#94a3b8">${s.mpCost > 0 ? s.mpCost + 'MP' : 'Livre'}</span>
         <div class="cd-overlay">0s</div>
@@ -464,14 +490,16 @@ export class HudController {
 
     const petHudBtn = this.root.querySelector('#btn-pet-hud') as HTMLElement | null;
     if (petHudBtn) {
-      petHudBtn.textContent = v.petActive ? 'Pet ON' : 'Pet OFF';
+      const petLabel = petHudBtn.querySelector('span');
+      if (petLabel) petLabel.textContent = v.petActive ? 'Pet ON' : 'Pet OFF';
       petHudBtn.style.color = v.petActive ? '#4ade80' : '#94a3b8';
       petHudBtn.style.borderColor = v.petActive ? '#4ade80' : '';
     }
     const evPill = this.root.querySelector('#event-pill') as HTMLElement | null;
     if (evPill) {
       const ev = getActiveWorldEvent();
-      evPill.textContent = `✦ ${ev.name}`;
+      const eventName = evPill.querySelector('#event-pill-name');
+      if (eventName) eventName.textContent = ev.name;
       evPill.title = `${ev.name}: ${ev.desc}`;
     }
     const buffsStrip = this.root.querySelector('#buffs-strip') as HTMLElement | null;
@@ -483,7 +511,14 @@ export class HudController {
           const sec = Math.max(1, Math.ceil((b.expiresAt - now) / 1000));
           const m = Math.floor(sec / 60);
           const s = sec % 60;
-          return `<span class="event-pill" style="border-color:#c084fc;color:#e9d5ff">⚗ ${b.name} ${m}:${String(s).padStart(2, '0')}</span>`;
+          const buffIcon = b.id === 'elixir_fury'
+            ? '/icons/items/elixir_fury.svg'
+            : b.id === 'elixir_wisdom'
+              ? '/icons/items/elixir_wisdom.svg'
+              : b.id === 'elixir_crit'
+                ? '/icons/items/elixir_crit.svg'
+                : '/icons/ui/buff.svg';
+          return `<span class="event-pill" style="border-color:#c084fc;color:#e9d5ff"><img src="${buffIcon}" alt="" class="hud-glyph" /> ${b.name} ${m}:${String(s).padStart(2, '0')}</span>`;
         })
         .join('');
     }
@@ -510,9 +545,11 @@ export class HudController {
     (this.root.querySelector('#hud-avatar') as HTMLElement).textContent = `${v.level}`;
     (this.root.querySelector('#hud-name') as HTMLElement).textContent =
       `${v.activeTitle ? `[${v.activeTitle}] ` : ''}${this.client.getSelfPlayer()?.name ?? 'Herói'}`;
-    (this.root.querySelector('#hud-gold') as HTMLElement).textContent = `${v.gold}g`;
+    const goldValue = this.root.querySelector('#hud-gold-value');
+    if (goldValue) goldValue.textContent = `${v.gold}g`;
     const cpEl = this.root.querySelector('#hud-cp') as HTMLElement | null;
-    if (cpEl) cpEl.textContent = `⚔ ${v.cp} CP`;
+    const cpValue = cpEl?.querySelector('#hud-cp-value');
+    if (cpValue) cpValue.textContent = `${v.cp} CP`;
     const tierEl = this.root.querySelector('#hud-tier') as HTMLElement | null;
     if (tierEl) {
       tierEl.textContent = `${tier.title}${v.rebirths ? ` • R${v.rebirths}` : ''}`;
@@ -576,7 +613,7 @@ export class HudController {
         .slice(0, 3)
         .map(
           (m) => `<div class="party-mini-row">
-            <span>${m.name} Lv.${m.level}</span>
+            <span>${escapeHtml(m.name)} Lv.${m.level}</span>
             <div class="bar-track" style="height:4px;margin-top:2px"><div class="bar-fill bar-hp" style="width:${(m.hp / Math.max(1, m.maxHp)) * 100}%"></div></div>
           </div>`
         )
@@ -589,6 +626,7 @@ export class HudController {
     const tf = this.root.querySelector('#target-frame') as HTMLElement;
     if (mob) {
       tf.classList.add('visible');
+      setMonsterPortrait(this.root.querySelector('#target-portrait'), mob.templateId);
       (this.root.querySelector('#target-name') as HTMLElement).textContent = `${mob.name} Lv.${mob.level}`;
       (this.root.querySelector('#target-hp-txt') as HTMLElement).textContent = `${mob.hp}/${mob.maxHp}`;
       (this.root.querySelector('#target-hp-bar') as HTMLElement).style.width = `${(mob.hp / mob.maxHp) * 100}%`;
@@ -602,7 +640,9 @@ export class HudController {
       const boss = this.client.monsters.find((m) => m.hp > 0 && MONSTER_TEMPLATES[m.templateId]?.isBoss);
       if (boss) {
         bossBar.style.display = 'block';
-        (this.root.querySelector('#boss-bar-name') as HTMLElement).textContent = `☠ ${boss.name} • Lv.${boss.level}`;
+        setMonsterPortrait(this.root.querySelector('#boss-portrait'), boss.templateId);
+        const bossName = this.root.querySelector('#boss-name-text');
+        if (bossName) bossName.textContent = `${boss.name} • Lv.${boss.level}`;
         (this.root.querySelector('#boss-bar-hp-txt') as HTMLElement).textContent = `${boss.hp}/${boss.maxHp} (${Math.round((boss.hp / Math.max(1, boss.maxHp)) * 100)}%)`;
         (this.root.querySelector('#boss-bar-fill') as HTMLElement).style.width = `${(boss.hp / Math.max(1, boss.maxHp)) * 100}%`;
       } else {
@@ -616,7 +656,8 @@ export class HudController {
       const ws = this.client.waveState;
       if (ws?.active) {
         waveBanner.style.display = 'block';
-        waveBanner.textContent = `⚔ Masmorra: Onda ${ws.wave}/${ws.maxWaves} • Restam ${ws.remaining}`;
+        const waveText = waveBanner.querySelector('#wave-banner-text');
+        if (waveText) waveText.textContent = `Masmorra: Onda ${ws.wave}/${ws.maxWaves} • Restam ${ws.remaining}`;
       } else {
         waveBanner.style.display = 'none';
       }
@@ -849,7 +890,7 @@ export class HudController {
       const selCost = upgradeCost(selUp);
       const selLabel = slotNamesPt[selSlot];
       const slotActionsHtml = `
-        <div class="hero-3d-caption">${v.activeTitle ? `<span style="color:#fbbf24">[${v.activeTitle}]</span> ` : ''}${this.client.getSelfPlayer()?.name ?? 'Herói'} • Lv.${v.level}</div>
+        <div class="hero-3d-caption">${v.activeTitle ? `<span style="color:#fbbf24">[${escapeHtml(v.activeTitle)}]</span> ` : ''}${escapeHtml(this.client.getSelfPlayer()?.name ?? 'Herói')} • Lv.${v.level}</div>
         <div style="font-size:10px;color:#94a3b8;margin-top:2px">${selTpl ? `${selLabel}: ${selTpl.name}${selUp > 0 ? ` +${selUp}` : ''}` : `${selLabel}: Vazio`}</div>
         <div style="display:flex;gap:4px;margin-top:3px;flex-wrap:wrap;justify-content:center">
           <button class="btn-secondary" id="btn-forge-selected" style="padding:3px 7px;font-size:10px" ${!selItem || selUp >= MAX_UPGRADE_LEVEL ? 'disabled' : ''}>
@@ -1076,7 +1117,7 @@ export class HudController {
             ${lines.map((l) => `<div style="font-size:11px;color:#e2e8f0">${l}</div>`).join('')}
             ${affixLines.length ? `<div style="font-size:10px;color:#60a5fa;margin-top:4px;border-top:1px solid rgba(100,116,139,0.3);padding-top:3px">Status Bônus (${affixLines.length}/${rar.maxAffixes}):</div>${affixLines.map((l) => `<div style="font-size:10px;color:#93c5fd">• ${l}</div>`).join('')}` : ''}
             ${compareHtml}
-            ${tpl.effectDesc ? `<div style="font-size:10px;color:#f3d37a;margin-top:4px">✦ ${tpl.effectDesc}</div>` : ''}
+            ${tpl.effectDesc ? `<div style="font-size:10px;color:#f3d37a;margin-top:4px">${tpl.effectDesc}</div>` : ''}
             <div style="font-size:10px;color:#94a3b8;margin-top:4px">${actionHint}</div>
           `;
           tip.style.display = 'block';
@@ -1320,7 +1361,7 @@ export class HudController {
         <div class="sheet-header"><h3>Chat</h3>${closeBtn}</div>
         <div class="card-box" style="max-height:180px;overflow-y:auto;display:flex;flex-direction:column;gap:4px">
           ${this.client.chatLog
-            .map((c) => `<div><strong style="color:#fbbf24">[${c.channel}] ${c.senderName}:</strong> ${c.text}</div>`)
+            .map((c) => `<div><strong style="color:#fbbf24">[${escapeHtml(c.channel)}] ${escapeHtml(c.senderName)}:</strong> ${escapeHtml(c.text)}</div>`)
             .join('') || 'Sem mensagens ainda.'}
         </div>
         <div style="display:flex;gap:6px">
@@ -1417,13 +1458,16 @@ export class HudController {
         menuBody = `<div class="grid-auto">
           ${Object.values(MONSTER_TEMPLATES)
             .map(
-              (m) => `<div class="card-box" style="border-color:${m.isBoss ? '#f59e0b' : 'var(--border-subtle)'}">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <strong style="color:${m.isBoss ? '#fbbf24' : '#f3efe6'}">${m.name}</strong>
-                  ${m.isBoss ? '<span class="tag-pill boss">BOSS</span>' : ''}
+              (m) => `<article class="card-box bestiary-card" style="border-color:${m.isBoss ? '#f59e0b' : 'var(--border-subtle)'}">
+                <img class="bestiary-card__portrait" src="/portraits/monsters/${m.id}.jpg" alt="Retrato de ${escapeHtml(m.name)}" loading="lazy" onerror="this.style.display='none'">
+                <div class="bestiary-card__body">
+                  <div class="bestiary-card__heading">
+                    <strong style="color:${m.isBoss ? '#fbbf24' : '#f3efe6'}">${escapeHtml(m.name)}</strong>
+                    ${m.isBoss ? '<span class="tag-pill boss">BOSS</span>' : ''}
+                  </div>
+                  <div class="bestiary-card__stats">Lv.${m.level} • HP ${m.maxHp} • ATK ${m.atk} • +${m.xpReward} XP</div>
                 </div>
-                <div style="font-size:10px;color:#94a3b8;margin-top:3px">Lv.${m.level} • HP ${m.maxHp} • ATK ${m.atk} • +${m.xpReward} XP</div>
-              </div>`
+              </article>`
             )
             .join('')}
         </div>`;
@@ -1441,7 +1485,7 @@ export class HudController {
                 : list
                     .map(
                       (e, idx) => `<div class="card-box" style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px">
-                        <span><strong style="color:#fbbf24">#${idx + 1}</strong> ${e.name} <small style="color:#94a3b8">(${e.heroClass} • Lv.${e.level}${e.rebirths > 0 ? ` • Asc.${e.rebirths}` : ''})</small></span>
+                        <span><strong style="color:#fbbf24">#${idx + 1}</strong> ${escapeHtml(e.name)} <small style="color:#94a3b8">(${escapeHtml(e.heroClass)} • Lv.${e.level}${e.rebirths > 0 ? ` • Asc.${e.rebirths}` : ''})</small></span>
                         <strong style="color:#60a5fa">${e.cp} CP</strong>
                       </div>`
                     )
@@ -1583,9 +1627,9 @@ export class HudController {
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px">
           ${Object.values(MAPS)
             .map(
-              (m) => `<button class="${m.id === this.client.mapId ? 'btn-primary' : 'btn-secondary'} world-tp" data-map="${m.id}" style="display:flex;justify-content:space-between;align-items:center">
-                <span>${m.name} <small style="color:#94a3b8">(${m.subtitle})</small></span>
-                <strong style="color:${m.themeColor}">${m.recommendedLv}</strong>
+              (m) => `<button class="${m.id === this.client.mapId ? 'btn-primary' : 'btn-secondary'} world-tp map-travel-card" data-map="${m.id}" style="--map-accent:${m.themeColor}">
+                <img class="map-travel-card__image" src="/previews/maps/${m.id}.jpg" alt="Concept visual de ${m.name}" loading="lazy" onerror="this.style.display='none'">
+                <span class="map-travel-card__details"><strong>${m.name}</strong><small>${m.subtitle}</small><em style="color:${m.themeColor}">${m.recommendedLv}</em></span>
               </button>`
             )
             .join('')}

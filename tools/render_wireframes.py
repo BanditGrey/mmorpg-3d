@@ -3,8 +3,9 @@ import json
 import bpy
 from mathutils import Vector, Euler
 
-MODELS_DIR = r"d:\MMORPG\client\public\models"
-OUT_DIR = r"d:\MMORPG\references"
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODELS_DIR = os.path.join(ROOT_DIR, "client", "public", "models")
+OUT_DIR = os.path.join(ROOT_DIR, "references")
 TARGETS = ["warrior", "mage", "paladin", "archer", "assassin", "slime", "wolf", "orc", "boss_golem"]
 
 

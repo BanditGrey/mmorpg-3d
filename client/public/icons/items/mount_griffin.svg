@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Grifo Celestial">
+  <defs>
+    <linearGradient id="body" x1=".12" y1=".08" x2=".88" y2=".94"><stop stop-color="#f4f7fa"/><stop offset=".22" stop-color="#f1d991"/><stop offset="1" stop-color="#665735"/></linearGradient>
+    <linearGradient id="dark" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f1d991"/><stop offset="1" stop-color="#665735"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff1b5"/><stop offset=".48" stop-color="#ffc85a"/><stop offset="1" stop-color="#755027"/></linearGradient>
+    <linearGradient id="fluid" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f1d991"/><stop offset="1" stop-color="#665735"/></linearGradient>
+  </defs>
+  <g fill="url(#body)" stroke="#101827" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"><path d="M16 44 22 31 32 27 38 17l8 2 1 10 7 7-5 8h-6l-1-8-9 2-4 9h-6l2-10Z"/><path d="m22 30-9-8 2 13m27-15 6-8 4 12" fill="none" stroke="url(#gold)" stroke-width="3"/></g>
+  <g></g>
+  <path d="M12 56h40" stroke="#ffc85a" stroke-width="1" opacity=".42"/>
+</svg>

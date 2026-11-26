@@ -114,20 +114,14 @@ export function renderItemIconHtml(
   const tpl = ITEM_TEMPLATES[templateId];
   const rarity: Rarity = tpl?.rarity ?? 'common';
   const color = RARITY_META[rarity].color;
-  const key: ItemIconKey = tpl?.iconKey ?? 'sword';
+  const safeId = /^[a-z0-9_-]+$/i.test(templateId) ? templateId : 'unknown';
+  const icon = tpl
+    ? `<img src="/icons/items/${safeId}.svg" alt="${tpl.name.replace(/[&<>\"']/g, '')}" width="${size - 6}" height="${size - 6}" loading="lazy" style="object-fit:contain" />`
+    : `<svg viewBox="0 0 64 64" width="${size - 6}" height="${size - 6}"><path d="M32 7 39 14 28 41 22 45 20 38Z" fill="#94a3b8" stroke="#fff"/><path d="m19 39 7 7-8 9-5-5Z" fill="#7c2d12"/></svg>`;
 
   return `
     <div style="position:relative;width:${size}px;height:${size}px;border-radius:9px;border:1.5px solid ${color};background:radial-gradient(circle at 35% 30%, ${color}33, #0b111c 80%);box-shadow:inset 0 0 8px ${color}44;flex-shrink:0;display:flex;align-items:center;justify-content:center">
-      <svg viewBox="0 0 64 64" width="${size - 6}" height="${size - 6}">
-        <defs>
-          <linearGradient id="metal" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#e2e8f0"/>
-            <stop offset="55%" stop-color="#64748b"/>
-            <stop offset="100%" stop-color="#334155"/>
-          </linearGradient>
-        </defs>
-        ${getIconSvgBody(key, color)}
-      </svg>
+      ${icon}
       ${
         upgradeLevel > 0
           ? `<span style="position:absolute;top:-5px;right:-5px;background:#b45309;border:1px solid #fbbf24;color:#fff;font-size:9px;font-weight:800;padding:1px 4px;border-radius:6px;line-height:1">+${upgradeLevel}</span>`

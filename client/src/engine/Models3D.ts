@@ -780,7 +780,7 @@ export function createMonsterModel3D(
   const hpFillMesh = createHpBar(root, hpY, hpWidth, isBoss ? 0xf97316 : 0xef4444);
 
   const nameSprite = createNameSprite(
-    isBoss ? `★ ${label}` : label,
+    isBoss ? `Boss · ${label}` : label,
     isBoss ? '#fb923c' : '#fca5a5'
   );
   nameSprite.position.set(0, hpY + 0.32, 0);

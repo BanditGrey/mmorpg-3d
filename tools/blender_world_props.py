@@ -5,7 +5,8 @@ import bpy
 import bmesh
 from mathutils import Euler
 
-sys.path.insert(0, r"d:\MMORPG\tools")
+ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from blender_textures import bake_pbr_material
 from blender_heroes import clear_scene, make_lathe_mesh, OUT_DIR
 

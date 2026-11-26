@@ -1,19 +1,36 @@
 import type http from 'node:http';
-import { ADMIN_KEY } from './db/Auth.js';
+import { adminKeyMatches } from './db/Auth.js';
 import type { WorldManager } from './WorldManager.js';
 
 function readJsonBody(req: http.IncomingMessage): Promise<Record<string, unknown>> {
   return new Promise((resolve, reject) => {
     let data = '';
-    req.on('data', (chunk) => {
-      data += chunk;
-      if (data.length > 16384) reject(new Error('Payload too large'));
+    let settled = false;
+    req.on('data', (chunk: Buffer | string) => {
+      if (settled) return;
+      data += chunk.toString();
+      if (Buffer.byteLength(data, 'utf8') > 16384) {
+        settled = true;
+        reject(new Error('Payload too large'));
+        req.destroy();
+      }
     });
     req.on('end', () => {
+      if (settled) return;
       try {
-        resolve(data ? (JSON.parse(data) as Record<string, unknown>) : {});
+        const parsed: unknown = data ? JSON.parse(data) : {};
+        if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) throw new Error();
+        settled = true;
+        resolve(parsed as Record<string, unknown>);
       } catch {
-        reject(new Error('Invalid JSON'));
+        settled = true;
+        reject(new Error('Invalid JSON object'));
+      }
+    });
+    req.on('error', (error) => {
+      if (!settled) {
+        settled = true;
+        reject(error);
       }
     });
   });
@@ -33,7 +50,7 @@ export async function handleAdminApi(
   if (!urlPath.startsWith('/api/admin')) return false;
 
   const key = req.headers['x-admin-key'];
-  if (key !== ADMIN_KEY) {
+  if (typeof key !== 'string' || !adminKeyMatches(key)) {
     sendJson(res, 401, { ok: false, error: 'Chave administrativa inválida' });
     return true;
   }

@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Turbilhão">
+<defs><radialGradient id="glow"><stop stop-color="#fb923c" stop-opacity=".48"/><stop offset="1" stop-color="#fb923c" stop-opacity="0"/></radialGradient></defs>
+<circle cx="32" cy="32" r="29" fill="url(#glow)"/><g fill="none" stroke="#fb923c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M43 22a17 17 0 1 0 4 17M43 22l2 10 9-5"/><path d="M32 21v22m-11-11h22"/></g>
+</svg>
